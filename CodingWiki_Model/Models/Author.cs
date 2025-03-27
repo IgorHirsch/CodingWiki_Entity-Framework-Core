@@ -32,6 +32,6 @@ namespace CodingWiki_Model.Models
             }
         }
 
-        public List<BookAuthorMap> BookAuthorMap { get; set; }
+        public List<BookAuthorMap> BookAuthorMap { get; set; } = new List<BookAuthorMap>();
     }
 }

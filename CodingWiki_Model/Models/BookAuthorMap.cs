@@ -11,7 +11,7 @@ namespace CodingWiki_Model.Models
     public class BookAuthorMap
     {
         [ForeignKey("Book")]
-        public int Book_Id { get; set; }
+        public int BookId { get; set; }
         public Book Book { get; set; }
 
         [ForeignKey("Author")]

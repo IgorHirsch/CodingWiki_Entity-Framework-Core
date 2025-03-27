@@ -10,7 +10,7 @@ namespace CodingWiki_Model.Models
 {
     public class Book
     {
-        // [Key]
+         [Key]
         public int BookId { get; set; }
 
         public string Title { get; set; }
@@ -30,6 +30,6 @@ namespace CodingWiki_Model.Models
         public int Publisher_Id { get; set; }
         public Publisher Publisher { get; set; }
 
-        public List<BookAuthorMap> BookAuthorMap { get; set; }
+        public List<BookAuthorMap> BookAuthorMap { get; set; } = new List<BookAuthorMap>();
     }
 }

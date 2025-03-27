@@ -4,6 +4,7 @@ using CodingWiki_DataAccess.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CodingWiki_DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250327162823_Need")]
+    partial class Need
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -96,7 +99,7 @@ namespace CodingWiki_DataAccess.Migrations
                             ISBN = "12123B12",
                             Price = 11.99m,
                             Publisher_Id = 1,
-                            Title = "Fortune of time"
+                            Title = "Fortune of Time"
                         },
                         new
                         {
@@ -129,12 +132,12 @@ namespace CodingWiki_DataAccess.Migrations
                     b.Property<int>("Author_Id")
                         .HasColumnType("int");
 
-                    b.Property<int>("BookId")
+                    b.Property<int>("Book_Id")
                         .HasColumnType("int");
 
-                    b.HasKey("Author_Id", "BookId");
+                    b.HasKey("Author_Id", "Book_Id");
 
-                    b.HasIndex("BookId");
+                    b.HasIndex("Book_Id");
 
                     b.ToTable("BookAuthorMaps");
                 });
@@ -391,7 +394,7 @@ namespace CodingWiki_DataAccess.Migrations
 
                     b.HasOne("CodingWiki_Model.Models.Book", "Book")
                         .WithMany("BookAuthorMap")
-                        .HasForeignKey("BookId")
+                        .HasForeignKey("Book_Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
