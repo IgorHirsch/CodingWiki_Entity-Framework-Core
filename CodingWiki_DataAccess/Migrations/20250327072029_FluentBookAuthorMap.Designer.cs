@@ -4,6 +4,7 @@ using CodingWiki_DataAccess.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CodingWiki_DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250327072029_FluentBookAuthorMap")]
+    partial class FluentBookAuthorMap
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -234,13 +237,16 @@ namespace CodingWiki_DataAccess.Migrations
                     b.Property<int>("Publisher_Id")
                         .HasColumnType("int");
 
+                    b.Property<int>("Publisher_Id1")
+                        .HasColumnType("int");
+
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("BookId");
 
-                    b.HasIndex("Publisher_Id");
+                    b.HasIndex("Publisher_Id1");
 
                     b.ToTable("Fluent_Books");
                 });
@@ -415,7 +421,7 @@ namespace CodingWiki_DataAccess.Migrations
                 {
                     b.HasOne("CodingWiki_Model.Models.Fluent_Publisher", "Publisher")
                         .WithMany("Books")
-                        .HasForeignKey("Publisher_Id")
+                        .HasForeignKey("Publisher_Id1")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
