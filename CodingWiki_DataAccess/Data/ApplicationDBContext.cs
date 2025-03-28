@@ -32,8 +32,8 @@ namespace CodingWiki_DataAccess.Data
         }
         protected override void OnConfiguring(DbContextOptionsBuilder options)
         {
-            //    options.UseSqlServer("Server=(LocalDb)\\MSSQLLocalDB;Database=CodingWiki;TrustServerCertificate=True;Trusted_Connection=True;")
-            //      .LogTo(Console.WriteLine, new[] { DbLoggerCategory.Database.Command.Name },LogLevel.Information);
+            //options.UseSqlServer("Server=SKYNET;Database=CodingWiki;TrustServerCertificate=True;Trusted_Connection=True;")
+            //  .LogTo(Console.WriteLine, new[] { DbLoggerCategory.Database.Command.Name }, LogLevel.Information);
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -62,7 +62,24 @@ namespace CodingWiki_DataAccess.Data
             modelBuilder.Entity<Book>().HasData(bookList);
 
 
-
+            modelBuilder.Entity<BookDetail>().HasData(
+                            new BookDetail
+                            {
+                                BookDetail_Id = 1,
+                                NumberOfChapters = 12,
+                                NumberOfPages = 350,
+                                Weight = "1.2kg",
+                                Book_Id = 1 // muss mit einem existierenden Book-Datensatz übereinstimmen
+                            },
+                            new BookDetail
+                            {
+                                BookDetail_Id = 2,
+                                NumberOfChapters = 20,
+                                NumberOfPages = 500,
+                                Weight = "1.8kg",
+                                Book_Id = 2
+                            }
+                        );
 
             modelBuilder.Entity<Publisher>().HasData(
                 new Publisher { Publisher_Id = 1, Name = "Pub 1 Jimmy", Location = "Chicago" },
