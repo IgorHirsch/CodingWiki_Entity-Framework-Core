@@ -1,6 +1,7 @@
 ﻿using CodingWiki_DataAccess.Data;
 using CodingWiki_Model.Models;
 using CodingWiki_Model.ViewModel;
+using CodingWiki_Model.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -20,8 +21,16 @@ namespace CodingWiki_Web.Controllers
 
         public IActionResult Index()
         {
-            List<Book> objList = _db.Books.Include(u => u.Publisher).ToList();
-            
+            //List<Book> objList = _db.Books.Include(u => u.Publisher).ToList();
+
+            // Eager Loading mit Include, um alle benötigten Daten auf einmal zu laden.
+            List<Book> objList = _db.Books.Include(u => u.Publisher)
+                                                                .Include(u => u.BookAuthorMap)
+                                                                .ThenInclude(u => u.Author)
+                                                                .ToList();
+
+
+
             return View(objList);
         }
 
@@ -132,6 +141,65 @@ namespace CodingWiki_Web.Controllers
 
 
             return RedirectToAction(nameof(Index));
+        }
+
+
+        public IActionResult ManageAuthors(int id)
+        {
+            BookAuthorVM obj = new()
+            {
+                BookAuthorList = _db.BookAuthorMaps.Include(u => u.Author)
+                                                                                    .Include(u => u.Book)
+                                                                                    .Where(u => u.BookId == id).ToList(),
+                BookAuthor = new()
+                {
+                    BookId = id
+                },
+                Book = _db.Books.FirstOrDefault(u => u.BookId == id)
+            };
+
+
+            List<int> tempListOfAssignedAuthor = obj.BookAuthorList.Select(u => u.Author_Id).ToList();
+
+            //NOT IN clause
+            //get all the authors whos id is not in tempListOfAssignedAuthors
+
+            var tempList = _db.Authors.Where(u => !tempListOfAssignedAuthor.Contains(u.Author_Id)).ToList();
+
+
+            obj.AuthorList = tempList.Select(i => new SelectListItem
+            {
+                Text = i.FullName,
+                Value = i.Author_Id.ToString()
+            });
+
+            return View(obj);
+        }
+
+        [HttpPost]
+        public IActionResult ManageAuthors(BookAuthorVM bookAuthorVM)
+        {
+            if (bookAuthorVM.BookAuthor.BookId != 0 && bookAuthorVM.BookAuthor.Author_Id != 0)
+            {
+                _db.BookAuthorMaps.Add(bookAuthorVM.BookAuthor);
+                _db.SaveChanges();
+            }
+            return RedirectToAction(nameof(ManageAuthors), new { @id = bookAuthorVM.BookAuthor.BookId });
+        }
+
+
+
+
+        [HttpPost]
+        public IActionResult RemoveAuthors(int authorId, BookAuthorVM bookAuthorVM)
+        {
+            int bookId = bookAuthorVM.Book.BookId;
+            BookAuthorMap bookAuthorMap = _db.BookAuthorMaps.FirstOrDefault(u => u.Author_Id == authorId && u.BookId == bookId);
+
+
+            _db.BookAuthorMaps.Remove(bookAuthorMap);
+            _db.SaveChanges();
+            return RedirectToAction(nameof(ManageAuthors), new { @id = bookId });
         }
     }
 }
